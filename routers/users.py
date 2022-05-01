@@ -1,4 +1,4 @@
-from datetime import datetime 
+from datetime import datetime
 from models.token import User
 from models.users import create_users, delete_users, generateFakePass, get_app_credentials, get_users, modify_users, change_password
 from api import get_current_active_user
@@ -15,7 +15,8 @@ router_users = APIRouter(
     redirect_slashes=False
 )
 
-router_users.redirect_slashes = False 
+router_users.redirect_slashes = False
+
 
 class PeeweeGetterDict(GetterDict):
     def get(self, key: Any, default: Any = None):
@@ -61,15 +62,18 @@ async def post_users(form: Password_form, current_user: User = Depends(get_curre
 
     return {"message": result}
 
+
 @router_users.get("/")
 async def fetch_users(current_user: User = Depends(get_current_active_user)):
     response = await get_users(current_user)
     return response
 
+
 @router_users.get("/appcredential/")
 async def fetch(current_user: User = Depends(get_current_active_user)):
     response = await get_app_credentials(current_user)
     return response
+
 
 @router_users.patch("/")
 async def patch_users(users: List[UsersModel], current_user: User = Depends(get_current_active_user)):

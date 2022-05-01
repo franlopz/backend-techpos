@@ -104,8 +104,9 @@ async def login(form_data: OAuth2ClientCredentialsRequestForm = Depends()):
                 detail="Incorrect username or password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        
-        dataToken = create_access_token(data=client_data,expires_delta=timedelta(minutes=30))
+
+        dataToken = create_access_token(
+            data=client_data, expires_delta=timedelta(minutes=30))
 
         return {**dataToken, "token_type": "bearer"}
 

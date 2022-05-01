@@ -81,7 +81,7 @@ async def get_summary(start, finish, current_user, uuid):
         "bypayment": [],
         "byitem": []
     }
-    
+
     await valid_uuid(user=current_user, uuid=uuid)
 
     d1 = datetime.strptime(str(start), "%Y-%m-%d")
@@ -114,7 +114,12 @@ async def get_summary(start, finish, current_user, uuid):
                        .select(Ticket.tipo.alias('tipo'),
                                fn.COALESCE(fn.SUM(Ticket.total), 0).alias('total'))
                        .group_by(Ticket.tipo)
-                       .where((Ticket.fecha >= start) & (Ticket.fecha <= finish) & (Ticket.companyUuid == uuid)))
+                       .where(
+                           (Ticket.fecha >= start) &
+                           (Ticket.fecha <= finish) &
+                           (Ticket.companyUuid == uuid) &
+                           (Ticket.total != 0)
+                       ))
 
     salesByHour = list(Ticket
                        .select(fn.HOUR(Ticket.hora)
@@ -145,7 +150,12 @@ async def get_summary(start, finish, current_user, uuid):
                               .alias('cantidad'),
                         )
                         .group_by(Producto.producto)
-                        .where((Producto.fecha >= start) & (Producto.fecha <= finish) & (Producto.companyUuid == uuid)))
+                        .where(
+                            (Producto.fecha >= start) &
+                            (Producto.fecha <= finish) &
+                            (Producto.companyUuid == uuid) &
+                            (Producto.precio != 0)
+                        ))
 
     for item in salesByItems:
         dataDashboard["byitem"].append(

@@ -61,6 +61,8 @@ async def create_users(users, current_user):
     salt = os.urandom(10)
     hexsalt = salt.hex()
     # try:
+    if conn.is_closed():
+        conn.connect()
 
     for user in users:
         password = generate_pass()
@@ -112,15 +114,15 @@ async def create_users(users, current_user):
                 userId=user_result,
                 companyId=company_id).execute()
 
-    if conn.is_closed():
-        conn.connect()
-
     if not conn.is_closed():
         conn.close()
     return "User saved"
 
 
 async def change_password(form, current_user):
+    if conn.is_closed():
+        conn.connect()
+
     salt = os.urandom(10)
     hexsalt = salt.hex()
     user = await models.token.auth_user(current_user.email, form.password)
@@ -138,11 +140,18 @@ async def change_password(form, current_user):
     query = Users.update(passwordHash=password_hash, passwordSalt=hexsalt).where(
         Users.email == current_user.email)
     result = query.execute()
+
+    if not conn.is_closed():
+        conn.close()
+
     if result > 0:
         return 'Password changed'
 
 
 async def get_users(current_user):
+
+    if conn.is_closed():
+        conn.connect()
 
     data = []
 
@@ -173,10 +182,18 @@ async def get_users(current_user):
                     "status": user_result.status,
                     "statusEn": user_result.status}
             )
+
+    if not conn.is_closed():
+        conn.close()
+
     return data
 
 
 async def get_app_credentials(current_user):
+
+    if conn.is_closed():
+        conn.connect()
+
     data = {}
     company_account_by_user = Company_account.get_or_none(
         Company_account.userId == current_user.id)
@@ -193,19 +210,29 @@ async def get_app_credentials(current_user):
                 App_credentials.app_id == account.appId
             )
             data = {
-                    "appId": credentials.app_id,
-                    "appKey": credentials.app_key
-                }
-            
+                "appId": credentials.app_id,
+                "appKey": credentials.app_key
+            }
+
+    if not conn.is_closed():
+        conn.close()
+
     return data
 
 
 def in_same_company(user, current_user):
+
+    if conn.is_closed():
+        conn.connect()
+
     user_result = Users.get_or_none(Users.email == user.email)
     user_accounts = Company_account.select().where(
         Company_account.userId == user_result.id)
     current_user_accounts = Company_account.select().where(
         Company_account.userId == current_user.id)
+
+    if not conn.is_closed():
+        conn.close()
 
     if user_accounts is not None and current_user_accounts is not None:
         for user_account in user_accounts:
@@ -216,6 +243,10 @@ def in_same_company(user, current_user):
 
 
 async def can_perform_action(user, current_user, action=None):
+
+    if conn.is_closed():
+        conn.connect()
+
     user_in_db = Users.get_or_none(Users.email == user.email)
     if current_user.email != user.email:
         if current_user.roleId >= user_in_db.roleId:
@@ -223,6 +254,9 @@ async def can_perform_action(user, current_user, action=None):
                 status_code=404, detail="Not able to perform action")
 
     role_result = role.Role.get_or_none(role.Role.roleName == user.role)
+
+    if not conn.is_closed():
+        conn.close()
 
     if current_user.email == user.email:
         if action == 'delete':
@@ -234,6 +268,9 @@ async def can_perform_action(user, current_user, action=None):
 
 
 async def modify_users(users, current_user):
+
+    if conn.is_closed():
+        conn.connect()
 
     for user in users:
 
@@ -258,12 +295,17 @@ async def modify_users(users, current_user):
                     Users.email == user.email
                 )
                 result = query.execute()
-                return result
             else:
-                return "Not able to update user"
+                result = "Not able to update user"
+    if not conn.is_closed():
+        conn.close()
+    return result
 
 
 async def delete_users(users, current_user):
+
+    if conn.is_closed():
+        conn.connect()
 
     for user in users:
 
@@ -284,4 +326,7 @@ async def delete_users(users, current_user):
                     Company_account.userId == user_account.userId)
                 company_in_db.delete_instance()
                 # Company_account.delete().where(Company_account.userId == user_account.userId)
-        return 'Users deleted'
+        result = 'Users deleted'
+    if not conn.is_closed():
+        conn.close()
+    return result
