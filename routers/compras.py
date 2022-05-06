@@ -61,24 +61,24 @@ class CompraBulkModel(BaseModel):
 
 
 @router_compras.get("/", response_model=List[CompraModel], summary="List of compras", description="Returns all compras")
-async def get_compras(start: date, finish: date, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
-    return await list_compras(start, finish, current_user, uuid)
+def get_compras(start: date, finish: date, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
+    return list_compras(start, finish, current_user, uuid)
 
 
 @router_compras.get("/reporte/", summary="Resumen de compras", description="Returns all compras")
-async def get_Report(start: date, finish: date, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
-    return await get_CompraReport(start, finish, current_user, uuid)
+def get_Report(start: date, finish: date, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
+    return get_CompraReport(start, finish, current_user, uuid)
 
 
 @router_compras.post("/", summary="Create a new compras")
-async def create(compras: List[CompraModel], current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
+def create(compras: List[CompraModel], current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
     temp = []
     for compra in compras:
         temp.append(compra.dict())
     #     print(producto.producto)
-    return await bulk_compra(items=temp, current_user=current_user, uuid=uuid)
+    return bulk_compra(items=temp, current_user=current_user, uuid=uuid)
 
 
 @router_compras.delete("/", summary="Delete compras")
-async def delete(comprasId: int, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
-    return await delete_compra(comprasId, current_user, uuid)
+def delete(comprasId: int, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
+    return delete_compra(comprasId, current_user, uuid)

@@ -50,14 +50,14 @@ class Ticket(BaseModel):
         db_table = 'tickets'
 
 
-async def bulk_tickets(items, current_user, uuid):
+def bulk_tickets(items, current_user, uuid):
     if conn.is_closed():
         conn.connect()
 
     items_to_iterate = items
     new_items = []
 
-    await valid_uuid(user=current_user, uuid=uuid)
+    valid_uuid(user=current_user, uuid=uuid)
 
     for item in items_to_iterate:
         temp_item = item
@@ -70,11 +70,11 @@ async def bulk_tickets(items, current_user, uuid):
     return bulktickets
 
 
-async def list_tickets(start, finish, current_user, uuid):
+def list_tickets(start, finish, current_user, uuid):
     if conn.is_closed():
         conn.connect()
 
-    await valid_uuid(user=current_user, uuid=uuid)
+    valid_uuid(user=current_user, uuid=uuid)
 
     listickets = list(Ticket.select().where(
         (Ticket.fecha >= start) &
@@ -86,11 +86,11 @@ async def list_tickets(start, finish, current_user, uuid):
     return listickets
 
 
-async def non_tax_report(start, finish, current_user, uuid):
+def non_tax_report(start, finish, current_user, uuid):
     if conn.is_closed():
         conn.connect()
 
-    await valid_uuid(user=current_user, uuid=uuid)
+    valid_uuid(user=current_user, uuid=uuid)
 
     data = list(Ticket
                 .select(
@@ -135,12 +135,12 @@ async def non_tax_report(start, finish, current_user, uuid):
     return data
 
 
-async def tax_payer_sales(start, finish, current_user, uuid):
+def tax_payer_sales(start, finish, current_user, uuid):
 
     if conn.is_closed():
         conn.connect()
 
-    await valid_uuid(user=current_user, uuid=uuid)
+    valid_uuid(user=current_user, uuid=uuid)
 
     data = list(Ticket
                 .select(
@@ -177,12 +177,12 @@ async def tax_payer_sales(start, finish, current_user, uuid):
     return data
 
 
-async def voided_sales(start, finish, current_user, uuid):
+def voided_sales(start, finish, current_user, uuid):
 
     if conn.is_closed():
         conn.connect()
 
-    await valid_uuid(user=current_user, uuid=uuid)
+    valid_uuid(user=current_user, uuid=uuid)
 
     unique_form_void = list(Ticket.select(
         Ticket.numResolucion.alias('resolution'),

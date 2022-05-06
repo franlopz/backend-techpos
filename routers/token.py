@@ -88,15 +88,15 @@ class Token(BaseModel):
 
 
 @router_token.post('/', response_model=Token)
-# async def login(form_data: OAuth2PasswordRequestForm = Depends(),
-async def login(form_data: OAuth2ClientCredentialsRequestForm = Depends()):
+# def login(form_data: OAuth2PasswordRequestForm = Depends(),
+def login(form_data: OAuth2ClientCredentialsRequestForm = Depends()):
     user = None
 
     print(form_data)
 
     if form_data.grant_type == "client_credentials":
 
-        client_data = await auth_app(form_data.client_id, form_data.client_secret)
+        client_data = auth_app(form_data.client_id, form_data.client_secret)
 
         if not client_data:
             raise HTTPException(
@@ -111,7 +111,7 @@ async def login(form_data: OAuth2ClientCredentialsRequestForm = Depends()):
         return {**dataToken, "token_type": "bearer"}
 
     if form_data.grant_type == "password":
-        user = await auth_user(form_data.username, form_data.password)
+        user = auth_user(form_data.username, form_data.password)
 
         if not user:
             raise HTTPException(
@@ -119,7 +119,7 @@ async def login(form_data: OAuth2ClientCredentialsRequestForm = Depends()):
                 detail="Incorrect username or password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        companies = await get_companies(user)
+        companies = get_companies(user)
         dataToken = create_access_token(
             data={"email": user.email,
                   "roleId": user.roleId},

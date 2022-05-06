@@ -38,6 +38,6 @@ class summary(BaseModel):
 
 
 @router_summary.get("/", response_model=summary, summary="List of tickets", description="Returns all tickets")
-async def get_tickets(start: date, finish: date, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
-    response = await get_summary(start, finish, current_user, uuid)
+def get_tickets(start: date, finish: date, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
+    response = get_summary(start, finish, current_user, uuid)
     return response

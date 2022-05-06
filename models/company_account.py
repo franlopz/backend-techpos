@@ -12,11 +12,10 @@ class Company_account(BaseModel):
         db_table = 'companyaccount'
 
 
-async def create_company_account(company_account):
+def create_company_account(company_account):
     if conn.is_closed():
         conn.connect()
     companies_inserted = Company_account.insert_many(company_account).execute()
     if not conn.is_closed():
         conn.close()
     return companies_inserted
-

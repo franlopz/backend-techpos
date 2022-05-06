@@ -12,7 +12,7 @@ class Role(BaseModel):
         db_table = 'roles'
 
 
-async def create_role(role):
+def create_role(role):
     if conn.is_closed():
         conn.connect()
     roles_inserted = Role.insert_many(role).execute()
@@ -21,7 +21,7 @@ async def create_role(role):
     return roles_inserted
 
 
-async def get_user_role(role_id):
+def get_user_role(role_id):
     if conn.is_closed():
         conn.connect()
     role = Users.select().where(Users.roleId == role_id).get()
@@ -30,7 +30,7 @@ async def get_user_role(role_id):
     return role
 
 
-async def get_roles(userId):
+def get_roles(userId):
     if conn.is_closed():
         conn.connect()
     roles_list = list(Role.select().where(Role.id <= userId))

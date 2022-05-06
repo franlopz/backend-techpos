@@ -34,14 +34,14 @@ class Compra(BaseModel):
         db_table = 'compras'
 
 
-async def bulk_compra(items, current_user, uuid):
+def bulk_compra(items, current_user, uuid):
     if conn.is_closed():
         conn.connect()
 
     items_to_iterate = items
     new_items = []
 
-    await valid_uuid(user=current_user, uuid=uuid)
+    valid_uuid(user=current_user, uuid=uuid)
 
     for item in items_to_iterate:
         temp_item = item
@@ -54,12 +54,12 @@ async def bulk_compra(items, current_user, uuid):
     return bulkcompra
 
 
-async def list_compras(start, finish, current_user, uuid):
+def list_compras(start, finish, current_user, uuid):
 
     if conn.is_closed():
         conn.connect()
 
-    await valid_uuid(user=current_user, uuid=uuid)
+    valid_uuid(user=current_user, uuid=uuid)
 
     listcompras = list(Compra
                        .select()
@@ -72,7 +72,7 @@ async def list_compras(start, finish, current_user, uuid):
     return listcompras
 
 
-async def delete_compra(id, current_user, uuid):
+def delete_compra(id, current_user, uuid):
     if conn.is_closed():
         conn.connect()
 
@@ -82,7 +82,7 @@ async def delete_compra(id, current_user, uuid):
     return compra.delete_instance()
 
 
-async def get_CompraReport(start, finish, current_user, uuid):
+def get_CompraReport(start, finish, current_user, uuid):
     dic = dict
 
     dic = {'gastos': {"Servicio": 0,
@@ -104,7 +104,7 @@ async def get_CompraReport(start, finish, current_user, uuid):
     if conn.is_closed():
         conn.connect()
 
-    await valid_uuid(user=current_user, uuid=uuid)
+    valid_uuid(user=current_user, uuid=uuid)
 
     reporteCompras = list(Compra.select(fn.SUM(Compra.compra).alias('compraTotal')).where(
         (Compra.fecha >= start) & (Compra.fecha <= finish) & (Compra.companyUuid == uuid)).dicts())

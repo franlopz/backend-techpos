@@ -47,7 +47,7 @@ class App_credentials(BaseModel):
         db_table = 'client_credential'
 
 
-async def generateFakePass():
+def generateFakePass():
     salt = os.urandom(10)
     hexsalt = salt.hex()
     password = generate_pass()
@@ -56,7 +56,7 @@ async def generateFakePass():
     return
 
 
-async def create_users(users, current_user):
+def create_users(users, current_user):
 
     salt = os.urandom(10)
     hexsalt = salt.hex()
@@ -94,11 +94,11 @@ async def create_users(users, current_user):
         if current_user.roleId > role_result.id:
             return "Forbidden transaction"
 
-        await send_email_async('Cuenta creada',
-                               user.email,
-                               {'title': 'Bienvenid@',
-                                'name': user.firstName,
-                                'password': password})
+        send_email_async('Cuenta creada',
+                         user.email,
+                         {'title': 'Bienvenid@',
+                          'name': user.firstName,
+                          'password': password})
 
         user_result = Users.insert(email=user.email,
                                    firstName=user.firstName,
@@ -119,13 +119,13 @@ async def create_users(users, current_user):
     return "User saved"
 
 
-async def change_password(form, current_user):
+def change_password(form, current_user):
     if conn.is_closed():
         conn.connect()
 
     salt = os.urandom(10)
     hexsalt = salt.hex()
-    user = await models.token.auth_user(current_user.email, form.password)
+    user = models.token.auth_user(current_user.email, form.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -148,7 +148,7 @@ async def change_password(form, current_user):
         return 'Password changed'
 
 
-async def get_users(current_user):
+def get_users(current_user):
 
     if conn.is_closed():
         conn.connect()
@@ -189,7 +189,7 @@ async def get_users(current_user):
     return data
 
 
-async def get_app_credentials(current_user):
+def get_app_credentials(current_user):
 
     if conn.is_closed():
         conn.connect()
@@ -242,7 +242,7 @@ def in_same_company(user, current_user):
         return False
 
 
-async def can_perform_action(user, current_user, action=None):
+def can_perform_action(user, current_user, action=None):
 
     if conn.is_closed():
         conn.connect()
@@ -267,14 +267,14 @@ async def can_perform_action(user, current_user, action=None):
                 status_code=404, detail="Not able to perform action")
 
 
-async def modify_users(users, current_user):
+def modify_users(users, current_user):
 
     if conn.is_closed():
         conn.connect()
 
     for user in users:
 
-        await can_perform_action(user, current_user)
+        can_perform_action(user, current_user)
 
         role_result = role.Role.get_or_none(role.Role.roleName == user.role)
 
@@ -302,14 +302,14 @@ async def modify_users(users, current_user):
     return result
 
 
-async def delete_users(users, current_user):
+def delete_users(users, current_user):
 
     if conn.is_closed():
         conn.connect()
 
     for user in users:
 
-        await can_perform_action(user, current_user, 'delete')
+        can_perform_action(user, current_user, 'delete')
 
         users_related = in_same_company(user, current_user)
 

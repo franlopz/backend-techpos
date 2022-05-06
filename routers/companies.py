@@ -43,18 +43,18 @@ class NewUserData(BaseModel):
 
 
 @router_companies.post("/")
-async def create_companies(companies: List[CompanyModel], current_user: User = Depends(get_current_active_user)):
+def create_companies(companies: List[CompanyModel], current_user: User = Depends(get_current_active_user)):
     temp = []
     for company in companies:
         data = company.dict()
         data['uuid'] = uuid.uuid4()
         temp.append(data)
 
-    result = await create_company(temp, current_user)
+    result = create_company(temp, current_user)
     return result
 
 
 @router_companies.get("/", response_model=NewUserData)
-async def fetch_companies(current_user: User = Depends(get_current_active_user)):
-    result = await get_companies(current_user)
+def fetch_companies(current_user: User = Depends(get_current_active_user)):
+    result = get_companies(current_user)
     return result

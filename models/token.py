@@ -43,7 +43,7 @@ class UserInDB(User):
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-async def get_user(email: str):
+def get_user(email: str):
     if conn.is_closed():
         conn.connect()
     user = list(User.select().where(User.email == email))
@@ -55,11 +55,11 @@ async def get_user(email: str):
         return
 
 
-async def verify_password(password, hashed_password, password_salt):
+def verify_password(password, hashed_password, password_salt):
     return pwd_context.verify(password+password_salt, hashed_password)
 
 
-async def auth_app(app_id: str, app_key: str):
+def auth_app(app_id: str, app_key: str):
 
     data = {}
 
@@ -88,18 +88,18 @@ async def auth_app(app_id: str, app_key: str):
     return data
 
 
-async def auth_user(email: str, password: str):
+def auth_user(email: str, password: str):
 
-    user = await get_user(email)
+    user = get_user(email)
     if not user:
         return False
-    if not await verify_password(password, user.passwordHash, user.passwordSalt):
+    if not verify_password(password, user.passwordHash, user.passwordSalt):
         return False
     return user
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)):
-    
+
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta

@@ -5,6 +5,7 @@ from .Base import BaseModel
 import json
 from database import *
 
+
 class Proveedor(BaseModel):
     id = IntegerField()
     nrc = CharField(max_length=255)
@@ -15,11 +16,12 @@ class Proveedor(BaseModel):
     class Meta:
         db_table = 'proveedores'
 
-async def bulk_proveedores(items,current_user,uuid):
+
+def bulk_proveedores(items, current_user, uuid):
     if conn.is_closed():
         conn.connect()
-        
-    await valid_uuid(user=current_user,uuid=uuid)
+
+    valid_uuid(user=current_user, uuid=uuid)
 
     items_to_iterate = items
     new_items = []
@@ -35,11 +37,11 @@ async def bulk_proveedores(items,current_user,uuid):
     return bulkproveedor
 
 
-
-def list_proveedor(current_user,uuid):
+def list_proveedor(current_user, uuid):
     if conn.is_closed():
-     conn.connect()
-    listproveedores = list(Proveedor.select().where(Proveedor.companyUuid == uuid))
+        conn.connect()
+    listproveedores = list(Proveedor.select().where(
+        Proveedor.companyUuid == uuid))
     if not conn.is_closed():
-     conn.close()
+        conn.close()
     return listproveedores

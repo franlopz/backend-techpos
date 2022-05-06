@@ -217,25 +217,26 @@ class appendResult(BaseModel):
 
 
 @router_tickets.get("/", response_model=List[TicketModel], summary="List of tickets", description="Returns all tickets")
-async def get_tickets(start: date, finish: date, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
-    response = await list_tickets(start, finish, current_user, uuid)
+def get_tickets(start: date, finish: date, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
+    response = list_tickets(start, finish, current_user, uuid)
     return response
 
 
 @router_tickets.post("/", summary="Create a new tickets")
-async def create(tickets: List[TicketModel], current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
+def create(tickets: List[TicketModel], current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
     temp = []
     for ticket in tickets:
         temp.append(ticket.dict())
     #     print(producto.producto)
-    response = await bulk_tickets(temp, current_user, uuid)
+    print(temp)
+    response = bulk_tickets(temp, current_user, uuid)
     return response
 
 
 @router_tickets.get("/taxappends/", response_model=appendResult)
-async def get(start: date, finish: date, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
+def get(start: date, finish: date, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
 
-    response_non_tax_payer = await non_tax_report(start, finish, current_user, uuid)
-    response_tax_payer = await tax_payer_sales(start, finish, current_user, uuid)
-    response_voided_sales = await voided_sales(start, finish, current_user, uuid)
+    response_non_tax_payer = non_tax_report(start, finish, current_user, uuid)
+    response_tax_payer = tax_payer_sales(start, finish, current_user, uuid)
+    response_voided_sales = voided_sales(start, finish, current_user, uuid)
     return {'non_tax_payer': response_non_tax_payer, 'tax_payer': response_tax_payer, 'voided_sales': response_voided_sales}

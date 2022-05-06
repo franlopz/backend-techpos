@@ -50,38 +50,38 @@ class Password_form(BaseModel):
 
 
 @router_users.post("/")
-async def post_users(users: List[UsersModel], current_user: User = Depends(get_current_active_user)):
-    result = await create_users(users, current_user)
+def post_users(users: List[UsersModel], current_user: User = Depends(get_current_active_user)):
+    result = create_users(users, current_user)
     return {"message": result}
 
 
 @router_users.post("/changepassword/")
-async def post_users(form: Password_form, current_user: User = Depends(get_current_active_user)):
+def post_users(form: Password_form, current_user: User = Depends(get_current_active_user)):
 
-    result = await change_password(form, current_user)
+    result = change_password(form, current_user)
 
     return {"message": result}
 
 
 @router_users.get("/")
-async def fetch_users(current_user: User = Depends(get_current_active_user)):
-    response = await get_users(current_user)
+def fetch_users(current_user: User = Depends(get_current_active_user)):
+    response = get_users(current_user)
     return response
 
 
 @router_users.get("/appcredential/")
-async def fetch(current_user: User = Depends(get_current_active_user)):
-    response = await get_app_credentials(current_user)
+def fetch(current_user: User = Depends(get_current_active_user)):
+    response = get_app_credentials(current_user)
     return response
 
 
 @router_users.patch("/")
-async def patch_users(users: List[UsersModel], current_user: User = Depends(get_current_active_user)):
-    response = await modify_users(users, current_user)
+def patch_users(users: List[UsersModel], current_user: User = Depends(get_current_active_user)):
+    response = modify_users(users, current_user)
     return response
 
 
 @router_users.delete("/")
-async def delete(users: List[UsersModel], current_user: User = Depends(get_current_active_user)):
-    response = await delete_users(users, current_user)
+def delete(users: List[UsersModel], current_user: User = Depends(get_current_active_user)):
+    response = delete_users(users, current_user)
     return response

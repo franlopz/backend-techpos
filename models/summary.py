@@ -69,7 +69,7 @@ def get_period(start, finish):
     return str(start) + " - " + str(finish)
 
 
-async def get_summary(start, finish, current_user, uuid):
+def get_summary(start, finish, current_user, uuid):
     if conn.is_closed():
         conn.connect()
 
@@ -82,7 +82,7 @@ async def get_summary(start, finish, current_user, uuid):
         "byitem": []
     }
 
-    await valid_uuid(user=current_user, uuid=uuid)
+    valid_uuid(user=current_user, uuid=uuid)
 
     d1 = datetime.strptime(str(start), "%Y-%m-%d")
     d2 = datetime.strptime(str(finish), "%Y-%m-%d")

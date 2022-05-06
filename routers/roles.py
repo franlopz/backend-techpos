@@ -32,23 +32,23 @@ class RolesModel(BaseModel):
 
 
 @router_roles.post("/")
-async def create_roles(roles: List[RolesModel], current_user: User = Depends(get_current_active_user)):
+def create_roles(roles: List[RolesModel], current_user: User = Depends(get_current_active_user)):
     temp = []
     for role in roles:
         temp.append(role.dict())
     #     print(producto.producto)
     print(temp)
-    result = await create_role(temp)
+    result = create_role(temp)
     return result
 
 
 @router_roles.get("/", response_model=List[RolesModel])
-async def fetch_roles(userId: int, current_user: User = Depends(get_current_active_user)):
-    result = await get_roles(userId)
+def fetch_roles(userId: int, current_user: User = Depends(get_current_active_user)):
+    result = get_roles(userId)
     return result
 
 
 @router_roles.get("/user/", response_model=UserModel)
-async def fetch_roles(current_user: User = Depends(get_current_active_user)):
-    result = await get_user_role(current_user.roleId)
+def fetch_roles(current_user: User = Depends(get_current_active_user)):
+    result = get_user_role(current_user.roleId)
     return result

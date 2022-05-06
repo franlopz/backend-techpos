@@ -22,13 +22,14 @@ class PeeweeGetterDict(GetterDict):
             return list(res)
         return res
 
+
 class GastoModel(BaseModel):
-    fecha:date
-    tipo:str
-    monto:float
-    descripcion:str
-    id:int
-    guardado:datetime
+    fecha: date
+    tipo: str
+    monto: float
+    descripcion: str
+    id: int
+    guardado: datetime
 
     class Config:
         orm_mode = True
@@ -36,30 +37,27 @@ class GastoModel(BaseModel):
 
 
 class GastoBulkModel(BaseModel):
-    gastos:List[GastoModel]
+    gastos: List[GastoModel]
 
     class Config:
         orm_mode = True
         getter_dict = PeeweeGetterDict
 
-@router_gastos.get("/", response_model=List[GastoModel], summary="List of gastos", description="Returns all gastos")
-def get_gastos(start:date,finish:date, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
-    return list_gasto(start,finish,current_user,uuid)
 
+@router_gastos.get("/", response_model=List[GastoModel], summary="List of gastos", description="Returns all gastos")
+def get_gastos(start: date, finish: date, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
+    return list_gasto(start, finish, current_user, uuid)
 
 
 @router_gastos.post("/", summary="Create a new gastos")
-async def create(gastos:List[GastoModel], current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
-     temp = []
-     for gasto in gastos:
-         temp.append(gasto.dict())
+def create(gastos: List[GastoModel], current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
+    temp = []
+    for gasto in gastos:
+        temp.append(gasto.dict())
     #     print(producto.producto)
-     return await bulk_gastos(temp,current_user,uuid)
+    return bulk_gastos(temp, current_user, uuid)
+
 
 @router_gastos.delete("/", summary="Delete gastos")
-async def delete(gastosId:int, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
-     return await delete_gasto(gastosId,current_user,uuid)
-    
-
-
-
+def delete(gastosId: int, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
+    return delete_gasto(gastosId, current_user, uuid)

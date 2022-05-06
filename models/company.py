@@ -6,6 +6,7 @@ from database import *
 from fastapi import HTTPException
 import secrets
 
+
 class Company(BaseModel):
     id = IntegerField()
     name = CharField(max_length=255)
@@ -18,15 +19,17 @@ class Company(BaseModel):
     class Meta:
         db_table = 'companies'
 
+
 class Client_credential(BaseModel):
     id = IntegerField()
     app_id = CharField(max_length=255)
-    app_key = CharField(max_length=255) 
+    app_key = CharField(max_length=255)
 
     class Meta:
         db_table = 'client_credential'
 
-async def create_company(companies, current_user):
+
+def create_company(companies, current_user):
     if current_user.roleId != 1:
         raise HTTPException(status_code=403, detail="Cannot create company")
     if conn.is_closed():
@@ -35,17 +38,19 @@ async def create_company(companies, current_user):
     for company in companies:
         app_id = secrets.token_hex(16)
         app_key = secrets.token_urlsafe(16)
-        Client_credential.insert(app_key=app_key,app_id=app_id).execute()
-        current_company = Company.get_or_none(Company.uuid==company['uuid'])
-        Company_account.insert(companyId=current_company.id,appId=app_id).execute()
-        print(app_id,app_key,current_company.id)
-    
+        Client_credential.insert(app_key=app_key, app_id=app_id).execute()
+        current_company = Company.get_or_none(Company.uuid == company['uuid'])
+        Company_account.insert(
+            companyId=current_company.id, appId=app_id).execute()
+        print(app_id, app_key, current_company.id)
+
     if not conn.is_closed():
         conn.close()
     return result
- 
-async def get_companies(current_user):
-    
+
+
+def get_companies(current_user):
+
     data = {}
     companies = []
     roles_result = []

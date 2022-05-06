@@ -14,7 +14,7 @@ class State(BaseModel):
         db_table = 'states'
 
 
-async def create_states(states):
+def create_states(states):
     if conn.is_closed():
         conn.connect()
     result = State.insert_many(states).execute()
@@ -23,7 +23,7 @@ async def create_states(states):
     return result
 
 
-async def get_states():
+def get_states():
     data = {}
     if conn.is_closed():
         conn.connect()
@@ -32,7 +32,8 @@ async def get_states():
     for state in states_result:
         cities_result = list(Cities.select(Cities.name.alias(
             'name')).where(Cities.stateId == state.id))
-        data[state.name] =  [cities_result[i].name for i in range(len(cities_result))]
+        data[state.name] = [
+            cities_result[i].name for i in range(len(cities_result))]
     print(data)
     if not conn.is_closed():
         conn.close()

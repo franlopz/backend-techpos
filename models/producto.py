@@ -22,7 +22,7 @@ class Producto(BaseModel):
         db_table = 'productos'
 
 
-async def create_producto(fecha: str, hora: str, producto: str, porcion: str, venta: str, tid: int, cantidad: float, precio: float):
+def create_producto(fecha: str, hora: str, producto: str, porcion: str, venta: str, tid: int, cantidad: float, precio: float):
     if conn.is_closed():
         conn.connect()
 
@@ -42,14 +42,14 @@ async def create_producto(fecha: str, hora: str, producto: str, porcion: str, ve
     return producto_object
 
 
-async def bulk_producto(items, current_user, uuid):
+def bulk_producto(items, current_user, uuid):
     if conn.is_closed():
         conn.connect()
 
     items_to_iterate = items
     new_items = []
 
-    await valid_uuid(user=current_user, uuid=uuid)
+    valid_uuid(user=current_user, uuid=uuid)
 
     for item in items_to_iterate:
         temp_item = item

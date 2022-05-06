@@ -22,18 +22,19 @@ class PeeweeGetterDict(GetterDict):
             return list(res)
         return res
 
+
 class PagoModel(BaseModel):
-    fecha:date
-    hora:time
-    tipoPago:str
-    pago:float
-    caja:str
-    usuario:str
-    correlativo:int
-    id:int
-    anulado:str
-    iva:float
-    tid:int
+    fecha: date
+    hora: time
+    tipoPago: str
+    pago: float
+    caja: str
+    usuario: str
+    correlativo: int
+    id: int
+    anulado: str
+    iva: float
+    tid: int
 
     class Config:
         orm_mode = True
@@ -41,7 +42,7 @@ class PagoModel(BaseModel):
 
 
 class PagoBulkModel(BaseModel):
-    pagos:List[PagoModel]
+    pagos: List[PagoModel]
 
     class Config:
         orm_mode = True
@@ -49,17 +50,14 @@ class PagoBulkModel(BaseModel):
 
 
 @router_pagos.get("/", response_model=List[PagoModel], summary="List of pagos", description="Returns all pagos")
-def get_pagos(start:date,finish:date, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
-    return list_pagos(start,finish,current_user, uuid) 
+def get_pagos(start: date, finish: date, current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
+    return list_pagos(start, finish, current_user, uuid)
+
 
 @router_pagos.post("/", summary="Create a new pagos")
-async def create(pagos:List[PagoModel], current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
-     temp = []
-     for pago in pagos:
-         temp.append(pago.dict())
+def create(pagos: List[PagoModel], current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
+    temp = []
+    for pago in pagos:
+        temp.append(pago.dict())
     #     print(producto.producto)
-     return await bulk_pagos(temp,current_user, uuid)
-    
-
-
-
+    return bulk_pagos(temp, current_user, uuid)

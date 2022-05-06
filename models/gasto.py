@@ -19,14 +19,14 @@ class Gasto(BaseModel):
         db_table = 'gastos'
 
 
-async def bulk_gastos(items, current_user, uuid):
+def bulk_gastos(items, current_user, uuid):
     if conn.is_closed():
         conn.connect()
 
     items_to_iterate = items
     new_items = []
 
-    await valid_uuid(user=current_user, uuid=uuid)
+    valid_uuid(user=current_user, uuid=uuid)
 
     for item in items_to_iterate:
         temp_item = item
@@ -39,7 +39,7 @@ async def bulk_gastos(items, current_user, uuid):
     return bulkgasto
 
 
-async def delete_gasto(id, current_user, uuid):
+def delete_gasto(id, current_user, uuid):
     if conn.is_closed():
         conn.connect()
     gasto = Gasto.get((Gasto.id == id), (Gasto.companyUuid == uuid))

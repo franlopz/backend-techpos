@@ -3,6 +3,7 @@ from peewee import *
 from .Base import BaseModel
 from database import *
 
+
 class Pago(BaseModel):
     fecha = DateField()
     hora = TimeField()
@@ -17,19 +18,19 @@ class Pago(BaseModel):
     anulado = CharField(max_length=255)
     companyUuid = CharField(max_length=255)
 
- 
     class Meta:
         db_table = 'pagos'
 
-async def bulk_pagos(items,current_user, uuid):
+
+def bulk_pagos(items, current_user, uuid):
     if conn.is_closed():
         conn.connect()
 
     items_to_iterate = items
     new_items = []
 
-    await valid_uuid(user=current_user,uuid=uuid)
-    
+    valid_uuid(user=current_user, uuid=uuid)
+
     for item in items_to_iterate:
         temp_item = item
         temp_item['companyUuid'] = uuid
@@ -40,10 +41,12 @@ async def bulk_pagos(items,current_user, uuid):
         conn.close()
     return bulkpagos
 
-def list_pagos(start, finish,current_user, uuid):
+
+def list_pagos(start, finish, current_user, uuid):
     if conn.is_closed():
-     conn.connect()
-    listPagos = list(Pago.select().where((Pago.fecha >= start) & (Pago.fecha <= finish)))
+        conn.connect()
+    listPagos = list(Pago.select().where(
+        (Pago.fecha >= start) & (Pago.fecha <= finish)))
     if not conn.is_closed():
-     conn.close()
+        conn.close()
     return listPagos

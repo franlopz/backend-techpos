@@ -35,11 +35,11 @@ class CitiesModel(BaseModel):
 
 
 @router_cities.post("/")
-async def createCities(cities: List[CitiesModel], current_user: User = Depends(get_current_active_user)):
+def createCities(cities: List[CitiesModel], current_user: User = Depends(get_current_active_user)):
     temp = []
     for city in cities:
         temp.append(city.dict())
     #     print(producto.producto)
     print(temp)
-    await create_cities(temp)
+    create_cities(temp)
     return

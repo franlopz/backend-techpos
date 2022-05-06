@@ -18,7 +18,7 @@ class TokenData(BaseModel):
     uuid: Optional[str] = None
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(token: str = Depends(oauth2_scheme)):
 
     user = None
 
@@ -36,20 +36,19 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
         if email is not None:
             if token_data.email is not None:
-                user = await get_user(token_data.email)
+                user = get_user(token_data.email)
                 return user
 
-        if token_data.app_id is not None: 
-            return UserModel(status="active",app_id=token_data.app_id, uuid=token_data.uuid)
-            
+        if token_data.app_id is not None:
+            return UserModel(status="active", app_id=token_data.app_id, uuid=token_data.uuid)
+
         raise credentials_exception
-        
+
     except JWTError:
         raise credentials_exception
 
 
-
-async def get_current_active_user(current_user: UserModel = Depends(get_current_user)):
+def get_current_active_user(current_user: UserModel = Depends(get_current_user)):
 
     if current_user.status == "inactive":
         raise HTTPException(status_code=400, detail="Inactive user")

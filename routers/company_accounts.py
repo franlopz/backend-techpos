@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from pydantic.utils import GetterDict
 import peewee
 from typing import Any, List
-from models.token import User 
+from models.token import User
 
 router_companies_accounts = APIRouter(
     prefix="/companiesaccounts",
@@ -25,7 +25,6 @@ class PeeweeGetterDict(GetterDict):
 class CompanyAccountModel(BaseModel):
     userId: int
     companyId: int
-    
 
     class Config:
         orm_mode = True
@@ -33,9 +32,9 @@ class CompanyAccountModel(BaseModel):
 
 
 @router_companies_accounts.post("/")
-async def create_companies(companies_account: List[CompanyAccountModel], current_user: User = Depends(get_current_active_user)):
+def create_companies(companies_account: List[CompanyAccountModel], current_user: User = Depends(get_current_active_user)):
     temp = []
     for account in companies_account:
         temp.append(account.dict())
-    result = await create_company_account(temp)
+    result = create_company_account(temp)
     return result

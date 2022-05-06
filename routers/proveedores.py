@@ -43,13 +43,13 @@ class ProveedorBulkModel(BaseModel):
 
 @router_proveedores.get("/", response_model=List[ProveedorModel], summary="List of proveedores", description="Returns all proveedores")
 def get_proveedores(current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
-    return list_proveedor(current_user,uuid)
+    return list_proveedor(current_user, uuid)
 
 
 @router_proveedores.post("/", summary="Create a new proveedores")
-async def create(proveedores: List[ProveedorModel], current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
+def create(proveedores: List[ProveedorModel], current_user: User = Depends(get_current_active_user), uuid: Optional[str] = Header(None)):
     temp = []
     for proveedor in proveedores:
         temp.append(proveedor.dict())
     #     print(producto.producto)
-    return await bulk_proveedores(temp,current_user,uuid)
+    return bulk_proveedores(temp, current_user, uuid)

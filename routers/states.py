@@ -34,22 +34,24 @@ class StatesModel(BaseModel):
 
 class ResponseModel(BaseModel):
     __root__: Dict[str, List[str]]
+
     class Config:
         orm_mode = True
         getter_dict = PeeweeGetterDict
-        
+
+
 @router_states.post("/")
-async def createStates(states: List[StatesModel], current_user: User = Depends(get_current_active_user)):
+def createStates(states: List[StatesModel], current_user: User = Depends(get_current_active_user)):
     temp = []
     for state in states:
         temp.append(state.dict())
     #     print(producto.producto)
     print(temp)
-    states = await create_states(temp)
+    states = create_states(temp)
     return states
 
 
 @router_states.get("/", response_model=ResponseModel)
-async def fetch_states(current_user: User = Depends(get_current_active_user)):
-    result = await get_states()
+def fetch_states(current_user: User = Depends(get_current_active_user)):
+    result = get_states()
     return result
