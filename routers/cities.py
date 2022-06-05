@@ -1,14 +1,11 @@
-from models.cities import create_cities
 from api import get_current_active_user
-from routers.token import UserModel
+from crud.cities import create_cities
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from pydantic.utils import GetterDict
 import peewee
 from typing import Any, List
-from models.compras import bulk_compra, list_compras, delete_compra, get_CompraReport
-from datetime import date, datetime, time
-from models.token import User
+from crud.token import User
 
 router_cities = APIRouter(
     prefix="/cities",

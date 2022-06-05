@@ -1,6 +1,6 @@
 from cmath import exp
-from models.company import get_companies
-from models.token import auth_app, auth_user, create_access_token
+from crud.company import get_companies
+from crud.token import auth_app, auth_user, create_access_token
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from pydantic import BaseModel
 from pydantic.utils import GetterDict

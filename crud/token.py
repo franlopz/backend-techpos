@@ -1,54 +1,25 @@
-from cmath import exp
 from constants import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
 from datetime import datetime, timedelta
 from typing import Optional
-from jose import JWTError, jwt
+from jose import jwt
 from database import *
 from peewee import *
-from .Base import BaseModel
+from models.client_credential import Client_credential
 from passlib.context import CryptContext
 from models.company_account import Company_account
 import models.company
-
-
-class User(BaseModel):
-    id = IntegerField()
-    email = CharField(max_length=255)
-    firstName = CharField(max_length=255)
-    lastName = CharField(max_length=255)
-    passwordSalt = CharField(max_length=255)
-    passwordHash = CharField(max_length=255)
-    createdDate = DateTimeField()
-    status = CharField(max_length=255)
-    loginTries = IntegerField()
-    roleId = IntegerField()
-
-    class Meta:
-        db_table = 'users'
-
-
-class Client_credential(BaseModel):
-    id = IntegerField()
-    app_id = CharField(max_length=255)
-    app_key = CharField(max_length=255)
-
-    class Meta:
-        db_table = 'client_credential'
-
+from models.user import User
 
 class UserInDB(User):
     passwordHash: str
-
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def get_user(email: str):
-    if conn.is_closed():
-        conn.connect()
+
     user = list(User.select().where(User.email == email))
-    if not conn.is_closed():
-        conn.close()
+
     if(user):
         return user[0]
     else:

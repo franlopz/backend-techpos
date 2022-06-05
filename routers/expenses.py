@@ -3,9 +3,9 @@ from pydantic import BaseModel
 from pydantic.utils import GetterDict
 import peewee
 from typing import Any, List, Optional
-from models.gasto import bulk_gastos, list_gasto, delete_gasto
-from datetime import date, datetime, time
-from models.token import User
+from datetime import date, datetime
+from crud.expense import bulk_gastos, delete_gasto, list_gasto
+from crud.token import User
 from api import get_current_active_user
 
 

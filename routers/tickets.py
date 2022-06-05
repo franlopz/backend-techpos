@@ -3,10 +3,10 @@ from pydantic import BaseModel, validator
 from pydantic.utils import GetterDict
 import peewee
 from typing import Any, List
-from models.ticket import bulk_tickets, list_tickets, non_tax_report, tax_payer_sales, voided_sales
 from datetime import date, datetime, time
 from typing import Optional
-from models.token import User
+from crud.ticket import bulk_tickets, list_tickets, non_tax_report, tax_payer_sales, voided_sales
+from crud.token import User
 from api import get_current_active_user
 
 

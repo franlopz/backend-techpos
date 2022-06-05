@@ -1,7 +1,7 @@
 
 from typing import Optional
 from pydantic import BaseModel
-from models.token import get_user
+from crud.token import get_user
 from routers.token import UserModel, Token
 from constants import ALGORITHM, SECRET_KEY
 from fastapi import Depends, HTTPException, status

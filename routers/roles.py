@@ -1,5 +1,5 @@
-from models.token import User
-from models.role import create_role, get_roles, get_user_role
+from crud.role import create_role, get_roles, get_user_role
+from crud.token import User
 from api import get_current_active_user
 from routers.token import UserModel
 from fastapi import APIRouter, Depends

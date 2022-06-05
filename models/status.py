@@ -1,9 +1,9 @@
 from peewee import *
 from .Base import BaseModel
 
-class State(BaseModel):
+class Status(BaseModel):
     id = IntegerField()
-    name = CharField(max_length=255)
+    name = CharField(max_length=45)
 
     class Meta:
-        db_table = 'states'
+        db_table = 'status'

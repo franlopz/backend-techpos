@@ -1,13 +1,12 @@
-
 from api import get_current_active_user
 from fastapi import APIRouter, Depends, Header
 from pydantic import BaseModel
 from pydantic.utils import GetterDict
 import peewee
 from typing import Any, List, Optional
-from models.compras import bulk_compra, list_compras, delete_compra, get_CompraReport
-from datetime import date, datetime, time
-from models.token import User
+from datetime import date, datetime
+from crud.purchase import bulk_compra, delete_compra, get_CompraReport, list_compras
+from crud.token import User
 from api import get_current_active_user
 
 router_compras = APIRouter(

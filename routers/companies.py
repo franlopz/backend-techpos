@@ -1,13 +1,12 @@
+from crud.company import create_company, get_companies
 from routers.roles import RolesModel
-from models.token import User
-from models.company import create_company, get_companies
+from crud.token import User
 from api import get_current_active_user
-from routers.token import UserModel
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from pydantic.utils import GetterDict
 import peewee
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
 import uuid
 
 router_companies = APIRouter(

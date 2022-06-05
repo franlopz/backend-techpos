@@ -1,67 +1,10 @@
 from core.check_business_uuid import valid_uuid
 from peewee import *
-from .Base import BaseModel
+from models.payment import Pago
+from models.product import Producto
+from models.ticket import Ticket
 from database import *
-from datetime import date, time, datetime, timedelta
-
-
-class Ticket(BaseModel):
-    id = IntegerField()
-    fecha = DateField()
-    hora = TimeField()
-    total = FloatField()
-    tipo = CharField(max_length=255)
-    documento = CharField(max_length=255)
-    tid = IntegerField()
-    puntosLealtad = CharField(max_length=255)
-    correlativo = IntegerField()
-    descuentoTotal = FloatField()
-    propina = FloatField()
-    descuentoLealtad = FloatField()
-    servicioDomicilio = FloatField()
-    cliente = CharField(max_length=255)
-    mesa = CharField(max_length=255)
-    anulado = CharField(max_length=255)
-    mesero = CharField(max_length=255)
-    companyUuid = CharField(max_length=255)
-
-    class Meta:
-        db_table = 'tickets'
-
-
-class Pago(BaseModel):
-    id = IntegerField()
-    fecha = DateField()
-    tipoPago = CharField(max_length=255)
-    pago = FloatField()
-    caja = CharField(max_length=255)
-    hora = TimeField()
-    usuario = CharField(max_length=255)
-    correlativo = IntegerField()
-    anulado = CharField(max_length=255)
-    iva = FloatField()
-    tid = IntegerField()
-    companyUuid = CharField(max_length=255)
-
-    class Meta:
-        db_table = 'pagos'
-
-
-class Producto(BaseModel):
-    id = IntegerField()
-    fecha = DateField()
-    hora = TimeField()
-    tid = IntegerField()
-    producto = CharField(max_length=255)
-    cantidad = FloatField()
-    porcion = CharField(max_length=255)
-    venta = CharField(max_length=255)
-    precio = FloatField()
-    companyUuid = CharField(max_length=255)
-
-    class Meta:
-        db_table = 'productos'
-
+from datetime import datetime, timedelta
 
 def get_period(start, finish):
     if start == finish:
@@ -70,8 +13,7 @@ def get_period(start, finish):
 
 
 def get_summary(start, finish, current_user, uuid):
-    if conn.is_closed():
-        conn.connect()
+
 
     dataDashboard = {
         "summary": [],
@@ -196,6 +138,5 @@ def get_summary(start, finish, current_user, uuid):
             "previousPeriod": get_period(startPreviousPeriod, finishPreviousPeriod),
         })
 
-    if not conn.is_closed():
-        conn.close()
+
     return dataDashboard

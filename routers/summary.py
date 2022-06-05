@@ -3,10 +3,10 @@ from pydantic import BaseModel
 from pydantic.utils import GetterDict
 import peewee
 from typing import Any, List, Dict
-from models.summary import get_summary
-from datetime import date, time
+from crud.summary import get_summary
+from datetime import date
 from typing import Optional
-from models.token import User
+from crud.token import User
 from api import get_current_active_user
 
 

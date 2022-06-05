@@ -1,13 +1,12 @@
-from datetime import datetime
-from models.token import User
-from models.users import create_users, delete_users, generateFakePass, get_app_credentials, get_users, modify_users, change_password
+from crud.token import User
 from api import get_current_active_user
-from routers.token import UserModel
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends 
 from pydantic import BaseModel
 from pydantic.utils import GetterDict
 import peewee
 from typing import Any, List, Optional
+
+from crud.user import change_password, create_users, delete_users, get_app_credentials, get_users, modify_users
 
 router_users = APIRouter(
     prefix="/users",

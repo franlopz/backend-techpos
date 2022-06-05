@@ -3,9 +3,9 @@ from pydantic import BaseModel
 from pydantic.utils import GetterDict
 import peewee
 from typing import Any, List, Optional
-from models.pago import bulk_pagos, list_pagos
 from datetime import date, time
-from models.token import User
+from crud.payment import bulk_pagos, list_pagos
+from crud.token import User
 from api import get_current_active_user
 
 
@@ -59,5 +59,4 @@ def create(pagos: List[PagoModel], current_user: User = Depends(get_current_acti
     temp = []
     for pago in pagos:
         temp.append(pago.dict())
-    #     print(producto.producto)
     return bulk_pagos(temp, current_user, uuid)

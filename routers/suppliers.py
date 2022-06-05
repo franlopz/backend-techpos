@@ -3,16 +3,15 @@ from pydantic import BaseModel
 from pydantic.utils import GetterDict
 import peewee
 from typing import Any, List, Optional
-from models.proveedores import bulk_proveedores, list_proveedor
-from datetime import date, datetime, time
-from models.token import User
+from datetime import datetime
+from crud.supplier import bulk_proveedores, list_proveedor
+from crud.token import User
 from api import get_current_active_user
 
 router_proveedores = APIRouter(
     prefix="/proveedores",
     tags=["proveedores"]
 )
-
 
 class PeeweeGetterDict(GetterDict):
     def get(self, key: Any, default: Any = None):

@@ -3,9 +3,9 @@ from pydantic import BaseModel
 from pydantic.utils import GetterDict
 import peewee
 from typing import Any, List, Optional
-from models.producto import bulk_producto, list_productos
 from datetime import date, time
-from models.token import User
+from crud.product import bulk_producto, list_productos
+from crud.token import User
 from api import get_current_active_user
 
 router_productos = APIRouter(

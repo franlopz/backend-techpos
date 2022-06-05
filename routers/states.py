@@ -1,12 +1,11 @@
-from models.state import create_states, get_states
 from api import get_current_active_user
-from routers.token import UserModel
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from pydantic.utils import GetterDict
 import peewee
-from typing import Any, Dict, List, Optional
-from models.token import User
+from typing import Any, Dict, List
+from crud.state import create_states, get_states
+from crud.token import User
 from api import get_current_active_user
 
 router_states = APIRouter(

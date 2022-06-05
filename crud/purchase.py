@@ -1,42 +1,12 @@
-from core.check_business_uuid import valid_uuid
-from peewee import *
-from .Base import BaseModel
 from database import *
-from .gasto import Gasto
-from .ticket import Ticket
-
-
-class Compra(BaseModel):
-    id = IntegerField()
-    fecha = DateField()
-    documento = CharField(max_length=255)
-    tipo = CharField(max_length=255)
-    referencia = CharField(max_length=255)
-    nrc = CharField(max_length=255)
-    nombre = CharField(max_length=255)
-    compra = FloatField()
-    iva = FloatField()
-    guardado = DateTimeField()
-    documentoId = IntegerField()
-    tipoId = IntegerField()
-    dui = CharField(max_length=255)
-    comInGra = FloatField()
-    comInEx = FloatField()
-    intExNoSuj = FloatField()
-    imExNoSuj = FloatField()
-    inGraBie = FloatField()
-    imGravBie = FloatField()
-    imGravSer = FloatField()
-    attachmentId = IntegerField()
-    companyUuid = CharField(max_length=255)
-
-    class Meta:
-        db_table = 'compras'
-
+from core.check_business_uuid import valid_uuid
+from models.expense import Gasto
+from models.purchase import Compra
+from models.ticket import Ticket
+from peewee import *
 
 def bulk_compra(items, current_user, uuid):
-    if conn.is_closed():
-        conn.connect()
+
 
     items_to_iterate = items
     new_items = []
@@ -49,15 +19,13 @@ def bulk_compra(items, current_user, uuid):
         new_items.append(temp_item)
 
     bulkcompra = Compra.insert_many(new_items).execute()
-    if not conn.is_closed():
-        conn.close()
+
     return bulkcompra
 
 
 def list_compras(start, finish, current_user, uuid):
 
-    if conn.is_closed():
-        conn.connect()
+
 
     valid_uuid(user=current_user, uuid=uuid)
 
@@ -67,18 +35,15 @@ def list_compras(start, finish, current_user, uuid):
                            (Compra.fecha >= start) & (Compra.fecha <= finish) & (Compra.companyUuid == uuid))
                        .order_by(Compra.fecha.desc())
                        )
-    if not conn.is_closed():
-        conn.close()
+
     return listcompras
 
 
 def delete_compra(id, current_user, uuid):
-    if conn.is_closed():
-        conn.connect()
+
 
     compra = Compra.get(Compra.id == id, Compra.companyUuid == uuid)
-    if not conn.is_closed():
-        conn.close()
+
     return compra.delete_instance()
 
 
@@ -101,8 +66,7 @@ def get_CompraReport(start, finish, current_user, uuid):
            'iva': {"total": 0,
                    "deducible": 0}}
 
-    if conn.is_closed():
-        conn.connect()
+
 
     valid_uuid(user=current_user, uuid=uuid)
 
@@ -139,6 +103,5 @@ def get_CompraReport(start, finish, current_user, uuid):
                                (rci['compraDeducible']/1.13))}
             )
 
-    if not conn.is_closed():
-        conn.close()
+
     return dic
