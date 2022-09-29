@@ -81,6 +81,7 @@ def get_summary(start, finish, current_user, uuid):
                               .alias('iva'),
                           )
                           .group_by(Pago.tipoPago)
+                          .order_by(fn.SUM(Pago.pago).desc())
                           .where((Pago.fecha >= start) & (Pago.fecha <= finish) & (Pago.companyUuid == uuid)))
 
     salesByItems = list(Producto
@@ -92,6 +93,7 @@ def get_summary(start, finish, current_user, uuid):
                               .alias('cantidad'),
                         )
                         .group_by(Producto.producto)
+                        .order_by(fn.SUM(Producto.precio).desc())
                         .where(
                             (Producto.fecha >= start) &
                             (Producto.fecha <= finish) &
