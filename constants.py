@@ -1,3 +1,7 @@
-SECRET_KEY = "5687c3276bf332c209698b45e83bab34409e4ae9f8c5011917c76a2ce67c6986"
+import os
+from dotenv import load_dotenv
+load_dotenv('.env')
+
+SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
