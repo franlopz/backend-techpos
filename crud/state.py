@@ -18,6 +18,4 @@ def get_states():
             'name')).where(Cities.stateId == state.id))
         data[state.name] = [
             cities_result[i].name for i in range(len(cities_result))]
-    print(data)
-
     return data

@@ -6,9 +6,9 @@ from routers import (cities, companies, expenses, payments, products, purchases,
 from database import *
 from starlette.middleware.cors import CORSMiddleware
 
-app = FastAPI(title='Contact.ly',
-              description='APIs for contact Apis',
-              version='0.1'
+app = FastAPI(title='Back Office API',
+              description='APIs Back Office',
+              version='1.00'
               )
 
 origins = ["*"]
@@ -34,9 +34,6 @@ def get_db(db_state=Depends(reset_db_state)):
             conn.close()
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
 app.include_router(token.router_token,dependencies=[Depends(get_db)])
 app.include_router(products.router_productos,dependencies=[Depends(get_db)])
 app.include_router(payments.router_pagos,dependencies=[Depends(get_db)])
